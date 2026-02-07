@@ -277,5 +277,135 @@
             </div>
         </main>
     </div>
+
+    <!-- New Campaign Modal -->
+    <div id="campaignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Campaign</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="campaignForm" class="modal-body">
+                <div class="form-group">
+                    <label for="campaignName">Campaign Name *</label>
+                    <input 
+                        type="text" 
+                        id="campaignName" 
+                        name="campaignName" 
+                        placeholder="e.g., Frontend Developer Positions"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="jobTitle">Job Title *</label>
+                    <input 
+                        type="text" 
+                        id="jobTitle" 
+                        name="jobTitle" 
+                        placeholder="e.g., Frontend Developer, Full Stack Engineer"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        name="location" 
+                        placeholder="e.g., Remote, San Francisco, CA"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Platforms *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Greenhouse" checked>
+                            <span>Greenhouse</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="LinkedIn">
+                            <span>LinkedIn</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Indeed">
+                            <span>Indeed</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="platforms" value="Workday">
+                            <span>Workday</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minSalary">Min Salary</label>
+                        <input 
+                            type="number" 
+                            id="minSalary" 
+                            name="minSalary" 
+                            placeholder="e.g., 80000"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxSalary">Max Salary</label>
+                        <input 
+                            type="number" 
+                            id="maxSalary" 
+                            name="maxSalary" 
+                            placeholder="e.g., 150000"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="keywords">Keywords (comma separated)</label>
+                    <input 
+                        type="text" 
+                        id="keywords" 
+                        name="keywords" 
+                        placeholder="e.g., React, JavaScript, TypeScript"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Employment Type</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="employmentType" value="Full-time" checked>
+                            <span>Full-time</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="employmentType" value="Part-time">
+                            <span>Part-time</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="employmentType" value="Contract">
+                            <span>Contract</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea 
+                        id="notes" 
+                        name="notes" 
+                        rows="3" 
+                        placeholder="Any additional information or preferences..."
+                    ></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
