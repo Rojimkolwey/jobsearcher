@@ -109,23 +109,59 @@ function setButtonLoading(button, loading) {
 // ========================================
 
 /**
- * Create a new job application campaign
+ * Open the new campaign modal
  */
-async function createNewCampaign() {
-    // This would normally open a modal/form, but for demo we'll use prompts
-    const campaignName = prompt('Enter campaign name (e.g., "Frontend Positions"):');
-    if (!campaignName) return;
+function openCampaignModal() {
+    const modal = document.getElementById('campaignModal');
+    modal.classList.add('active');
+}
+
+/**
+ * Close the campaign modal
+ */
+function closeCampaignModal() {
+    const modal = document.getElementById('campaignModal');
+    modal.classList.remove('active');
     
-    const jobTitle = prompt('Enter job title to search for:');
-    if (!jobTitle) return;
+    // Reset form
+    document.getElementById('campaignForm').reset();
+}
+
+/**
+ * Create a new job application campaign from form data
+ */
+async function createNewCampaign(formData) {
+    // Get form values
+    const campaignName = formData.get('campaignName');
+    const jobTitle = formData.get('jobTitle');
+    const location = formData.get('location');
+    const minSalary = formData.get('minSalary');
+    const maxSalary = formData.get('maxSalary');
+    const keywords = formData.get('keywords');
+    const notes = formData.get('notes');
     
-    const platforms = prompt('Enter platforms (comma separated, e.g., "Greenhouse,LinkedIn"):');
-    if (!platforms) return;
+    // Get selected platforms (checkboxes)
+    const platforms = formData.getAll('platforms');
+    
+    // Get selected employment types (checkboxes)
+    const employmentTypes = formData.getAll('employmentType');
+    
+    // Validate at least one platform is selected
+    if (platforms.length === 0) {
+        showNotification('Please select at least one platform', 'error');
+        return;
+    }
     
     const data = {
         campaignName: campaignName,
         jobTitle: jobTitle,
-        platforms: platforms.split(',').map(p => p.trim()),
+        location: location || '',
+        platforms: platforms,
+        employmentTypes: employmentTypes,
+        minSalary: minSalary || null,
+        maxSalary: maxSalary || null,
+        keywords: keywords ? keywords.split(',').map(k => k.trim()) : [],
+        notes: notes || '',
         status: 'active',
         createdAt: new Date().toISOString()
     };
@@ -134,6 +170,9 @@ async function createNewCampaign() {
         showNotification('Creating campaign...', 'info');
         const result = await callWebhook(CONFIG.webhooks.createCampaign, data);
         showNotification('Campaign created successfully!', 'success');
+        
+        // Close modal
+        closeCampaignModal();
         
         // Refresh campaigns list
         loadCampaigns();
@@ -444,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', async function() {
             switch(buttonText) {
                 case 'New Campaign':
-                    await createNewCampaign();
+                    openCampaignModal();
                     break;
                 case 'Upload Resume':
                     await handleResumeUpload();
@@ -457,6 +496,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
             }
         });
+    });
+    
+    // Modal event listeners
+    const modal = document.getElementById('campaignModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const campaignForm = document.getElementById('campaignForm');
+    
+    // Close modal when clicking X button
+    closeModalBtn.addEventListener('click', closeCampaignModal);
+    
+    // Close modal when clicking Cancel button
+    cancelBtn.addEventListener('click', closeCampaignModal);
+    
+    // Close modal when clicking outside of it
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeCampaignModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeCampaignModal();
+        }
+    });
+    
+    // Handle form submission
+    campaignForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(campaignForm);
+        const submitBtn = campaignForm.querySelector('button[type="submit"]');
+        
+        setButtonLoading(submitBtn, true);
+        
+        try {
+            await createNewCampaign(formData);
+        } finally {
+            setButtonLoading(submitBtn, false);
+        }
     });
     
     // Load initial data
