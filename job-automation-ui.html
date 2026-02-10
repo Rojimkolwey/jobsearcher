@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Application Automation System</title>
+    <title>Applications - JobAutomate</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
+    <script src="applications.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -19,8 +20,8 @@
                 <h1>JobAutomate</h1>
             </div>
             <nav class="nav">
-                <a href="#dashboard" class="nav-link active">Dashboard</a>
-                <a href="#applications" class="nav-link">Applications</a>
+                <a href="job-automation-ui.html" class="nav-link">Dashboard</a>
+                <a href="applications.html" class="nav-link active">Applications</a>
                 <a href="#settings" class="nav-link">Settings</a>
                 <a href="#profile" class="nav-link">Profile</a>
             </nav>
@@ -31,380 +32,239 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Stats Cards -->
-            <section class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon blue">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                            <polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <p class="stat-label">Total Applications</p>
-                        <h3 class="stat-value">247</h3>
-                        <p class="stat-change positive">+12 this week</p>
-                    </div>
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Job Applications</h1>
+                    <p class="page-subtitle">Track and manage all your job applications</p>
+                </div>
+                <button class="btn-primary" id="exportBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Export</span>
+                </button>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="filters-section">
+                <div class="search-bar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search by company, position, or location..."
+                    >
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon green">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <p class="stat-label">Active Campaigns</p>
-                        <h3 class="stat-value">8</h3>
-                        <p class="stat-change positive">2 running now</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon yellow">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <p class="stat-label">Response Rate</p>
-                        <h3 class="stat-value">18%</h3>
-                        <p class="stat-change positive">+3% vs last month</p>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon purple">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </div>
-                    <div class="stat-content">
-                        <p class="stat-label">Interviews</p>
-                        <h3 class="stat-value">23</h3>
-                        <p class="stat-change positive">5 scheduled</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Quick Actions -->
-            <section class="quick-actions">
-                <h2 class="section-title">Quick Actions</h2>
-                <div class="action-grid">
-                    <button class="action-btn primary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"/>
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        <span>New Campaign</span>
+                <div class="filter-pills">
+                    <button class="filter-pill active" data-status="all">
+                        All <span class="pill-count">247</span>
                     </button>
-                    <button class="action-btn secondary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <span>Upload Resume</span>
+                    <button class="filter-pill" data-status="pending">
+                        Pending <span class="pill-count">89</span>
                     </button>
-                    <button class="action-btn secondary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        <span>Find Jobs</span>
+                    <button class="filter-pill" data-status="reviewing">
+                        Reviewing <span class="pill-count">102</span>
                     </button>
-                    <button class="action-btn secondary">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-                        </svg>
-                        <span>Settings</span>
+                    <button class="filter-pill" data-status="interview">
+                        Interview <span class="pill-count">23</span>
+                    </button>
+                    <button class="filter-pill" data-status="rejected">
+                        Rejected <span class="pill-count">33</span>
                     </button>
                 </div>
-            </section>
 
-            <!-- Two Column Layout -->
-            <div class="two-column">
-                <!-- Recent Applications -->
-                <section class="applications-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Recent Applications</h2>
-                        <a href="#" class="view-all">View all →</a>
+                <div class="filter-controls">
+                    <select id="sortSelect" class="filter-select">
+                        <option value="date-desc">Latest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="company-asc">Company A-Z</option>
+                        <option value="company-desc">Company Z-A</option>
+                    </select>
+
+                    <select id="platformFilter" class="filter-select">
+                        <option value="all">All Platforms</option>
+                        <option value="greenhouse">Greenhouse</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="indeed">Indeed</option>
+                        <option value="workday">Workday</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    Grid
+                </button>
+                <button class="view-btn" data-view="list">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                    List
+                </button>
+                <button class="view-btn" data-view="kanban">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="18"/>
+                        <rect x="14" y="3" width="7" height="9"/>
+                    </svg>
+                    Kanban
+                </button>
+            </div>
+
+            <!-- Applications Container -->
+            <div id="applicationsContainer" class="applications-grid">
+                <!-- Grid View Applications will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Kanban View (hidden by default) -->
+            <div id="kanbanView" class="kanban-view" style="display: none;">
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3>Pending</h3>
+                        <span class="kanban-count">89</span>
                     </div>
-                    <div class="applications-list">
-                        <div class="application-item">
-                            <div class="company-logo" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">G</div>
-                            <div class="application-info">
-                                <h4>Senior Frontend Developer</h4>
-                                <p class="company">Google • Mountain View, CA</p>
-                                <p class="date">Applied 2 hours ago</p>
-                            </div>
-                            <span class="status-badge pending">Pending</span>
-                        </div>
-
-                        <div class="application-item">
-                            <div class="company-logo" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">M</div>
-                            <div class="application-info">
-                                <h4>Full Stack Engineer</h4>
-                                <p class="company">Meta • Menlo Park, CA</p>
-                                <p class="date">Applied yesterday</p>
-                            </div>
-                            <span class="status-badge reviewing">Reviewing</span>
-                        </div>
-
-                        <div class="application-item">
-                            <div class="company-logo" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">A</div>
-                            <div class="application-info">
-                                <h4>Software Engineer II</h4>
-                                <p class="company">Amazon • Seattle, WA</p>
-                                <p class="date">Applied 3 days ago</p>
-                            </div>
-                            <span class="status-badge interview">Interview</span>
-                        </div>
-
-                        <div class="application-item">
-                            <div class="company-logo" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">N</div>
-                            <div class="application-info">
-                                <h4>DevOps Engineer</h4>
-                                <p class="company">Netflix • Los Gatos, CA</p>
-                                <p class="date">Applied 5 days ago</p>
-                            </div>
-                            <span class="status-badge rejected">Rejected</span>
-                        </div>
-
-                        <div class="application-item">
-                            <div class="company-logo" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">S</div>
-                            <div class="application-info">
-                                <h4>Backend Developer</h4>
-                                <p class="company">Stripe • San Francisco, CA</p>
-                                <p class="date">Applied 1 week ago</p>
-                            </div>
-                            <span class="status-badge reviewing">Reviewing</span>
-                        </div>
+                    <div class="kanban-cards" data-status="pending">
+                        <!-- Cards will be inserted here -->
                     </div>
-                </section>
+                </div>
 
-                <!-- Active Campaigns -->
-                <section class="campaigns-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Active Campaigns</h2>
-                        <a href="#" class="view-all">View all →</a>
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3>Reviewing</h3>
+                        <span class="kanban-count">102</span>
                     </div>
-                    <div class="campaigns-list">
-                        <div class="campaign-card">
-                            <div class="campaign-header">
-                                <h4>Frontend Positions</h4>
-                                <span class="campaign-status active">Active</span>
-                            </div>
-                            <div class="campaign-stats">
-                                <div class="campaign-stat">
-                                    <span class="stat-number">45</span>
-                                    <span class="stat-text">Applied</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">8</span>
-                                    <span class="stat-text">Responses</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">3</span>
-                                    <span class="stat-text">Interviews</span>
-                                </div>
-                            </div>
-                            <div class="campaign-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 68%;"></div>
-                                </div>
-                                <span class="progress-text">68% Complete</span>
-                            </div>
-                        </div>
-
-                        <div class="campaign-card">
-                            <div class="campaign-header">
-                                <h4>Full Stack Remote</h4>
-                                <span class="campaign-status active">Active</span>
-                            </div>
-                            <div class="campaign-stats">
-                                <div class="campaign-stat">
-                                    <span class="stat-number">32</span>
-                                    <span class="stat-text">Applied</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">5</span>
-                                    <span class="stat-text">Responses</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">2</span>
-                                    <span class="stat-text">Interviews</span>
-                                </div>
-                            </div>
-                            <div class="campaign-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 42%;"></div>
-                                </div>
-                                <span class="progress-text">42% Complete</span>
-                            </div>
-                        </div>
-
-                        <div class="campaign-card">
-                            <div class="campaign-header">
-                                <h4>Senior Backend Roles</h4>
-                                <span class="campaign-status paused">Paused</span>
-                            </div>
-                            <div class="campaign-stats">
-                                <div class="campaign-stat">
-                                    <span class="stat-number">18</span>
-                                    <span class="stat-text">Applied</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">3</span>
-                                    <span class="stat-text">Responses</span>
-                                </div>
-                                <div class="campaign-stat">
-                                    <span class="stat-number">1</span>
-                                    <span class="stat-text">Interviews</span>
-                                </div>
-                            </div>
-                            <div class="campaign-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 25%;"></div>
-                                </div>
-                                <span class="progress-text">25% Complete</span>
-                            </div>
-                        </div>
+                    <div class="kanban-cards" data-status="reviewing">
+                        <!-- Cards will be inserted here -->
                     </div>
-                </section>
+                </div>
+
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3>Interview</h3>
+                        <span class="kanban-count">23</span>
+                    </div>
+                    <div class="kanban-cards" data-status="interview">
+                        <!-- Cards will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <h3>Rejected</h3>
+                        <span class="kanban-count">33</span>
+                    </div>
+                    <div class="kanban-cards" data-status="rejected">
+                        <!-- Cards will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="pagination-btn" id="prevBtn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                    Previous
+                </button>
+                <div class="pagination-info">
+                    Page <span id="currentPage">1</span> of <span id="totalPages">10</span>
+                </div>
+                <button class="pagination-btn" id="nextBtn">
+                    Next
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
             </div>
         </main>
     </div>
 
-    <!-- New Campaign Modal -->
-    <div id="campaignModal" class="modal">
-        <div class="modal-content">
+    <!-- Application Details Modal -->
+    <div id="appDetailsModal" class="modal">
+        <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2>Create New Campaign</h2>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <h2 id="modalJobTitle">Senior Frontend Developer</h2>
+                <button class="modal-close" id="closeDetailsModal">&times;</button>
             </div>
-            <form id="campaignForm" class="modal-body">
-                <div class="form-group">
-                    <label for="campaignName">Campaign Name *</label>
-                    <input 
-                        type="text" 
-                        id="campaignName" 
-                        name="campaignName" 
-                        placeholder="e.g., Frontend Developer Positions"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="jobTitle">Job Title *</label>
-                    <input 
-                        type="text" 
-                        id="jobTitle" 
-                        name="jobTitle" 
-                        placeholder="e.g., Frontend Developer, Full Stack Engineer"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input 
-                        type="text" 
-                        id="location" 
-                        name="location" 
-                        placeholder="e.g., Remote, San Francisco, CA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Platforms *</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Greenhouse" checked>
-                            <span>Greenhouse</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="LinkedIn">
-                            <span>LinkedIn</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Indeed">
-                            <span>Indeed</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Workday">
-                            <span>Workday</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="minSalary">Min Salary</label>
-                        <input 
-                            type="number" 
-                            id="minSalary" 
-                            name="minSalary" 
-                            placeholder="e.g., 80000"
-                        >
+            <div class="modal-body">
+                <div class="app-details-grid">
+                    <div class="app-detail-section">
+                        <h3>Company Information</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Company:</span>
+                            <span class="detail-value" id="modalCompany">Google</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value" id="modalLocation">Mountain View, CA</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Platform:</span>
+                            <span class="detail-value" id="modalPlatform">Greenhouse</span>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="maxSalary">Max Salary</label>
-                        <input 
-                            type="number" 
-                            id="maxSalary" 
-                            name="maxSalary" 
-                            placeholder="e.g., 150000"
-                        >
+                    <div class="app-detail-section">
+                        <h3>Application Status</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span class="status-badge" id="modalStatus">Pending</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Applied Date:</span>
+                            <span class="detail-value" id="modalDate">Feb 7, 2026</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Campaign:</span>
+                            <span class="detail-value" id="modalCampaign">Frontend Positions</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="keywords">Keywords (comma separated)</label>
-                    <input 
-                        type="text" 
-                        id="keywords" 
-                        name="keywords" 
-                        placeholder="e.g., React, JavaScript, TypeScript"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Employment Type</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Full-time" checked>
-                            <span>Full-time</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Part-time">
-                            <span>Part-time</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Contract">
-                            <span>Contract</span>
-                        </label>
+                    <div class="app-detail-section full-width">
+                        <h3>Job Details</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Job URL:</span>
+                            <a href="#" class="detail-link" id="modalJobUrl" target="_blank">View Job Posting →</a>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Salary Range:</span>
+                            <span class="detail-value" id="modalSalary">$120,000 - $180,000</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea 
-                        id="notes" 
-                        name="notes" 
-                        rows="3" 
-                        placeholder="Any additional information or preferences..."
-                    ></textarea>
+                    <div class="app-detail-section full-width">
+                        <h3>Notes</h3>
+                        <textarea id="modalNotes" class="notes-textarea" placeholder="Add notes about this application..."></textarea>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
-                    <button type="submit" class="btn-primary">Create Campaign</button>
+                    <button class="btn-danger">Delete Application</button>
+                    <div>
+                        <button type="button" class="btn-secondary" id="closeDetailsBtn">Close</button>
+                        <button type="button" class="btn-primary" id="saveNotesBtn">Save Notes</button>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </body>

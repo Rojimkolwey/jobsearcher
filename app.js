@@ -1,336 +1,368 @@
 // ========================================
-// Configuration
+// Sample Application Data (Mock Data)
 // ========================================
 
-const CONFIG = {
-    // n8n webhook URLs - YOU WILL REPLACE THESE with your actual n8n webhook URLs
-    webhooks: {
-        createCampaign: 'http://localhost:5678/webhook/create-campaign',
-        getApplications: 'http://localhost:5678/webhook/get-applications',
-        getCampaigns: 'http://localhost:5678/webhook/get-campaigns',
-        getStats: 'http://localhost:5678/webhook/get-stats',
-        uploadResume: 'http://localhost:5678/webhook/upload-resume',
-        findJobs: 'http://localhost:5678/webhook/find-jobs'
+const sampleApplications = [
+    {
+        id: 1,
+        jobTitle: "Senior Frontend Developer",
+        company: "Google",
+        location: "Mountain View, CA",
+        status: "pending",
+        appliedDate: "2026-02-07T10:30:00",
+        platform: "Greenhouse",
+        jobUrl: "https://careers.google.com/jobs/example",
+        campaign: "Frontend Positions",
+        salary: "$140,000 - $200,000",
+        notes: ""
+    },
+    {
+        id: 2,
+        jobTitle: "Full Stack Engineer",
+        company: "Meta",
+        location: "Menlo Park, CA",
+        status: "reviewing",
+        appliedDate: "2026-02-06T14:20:00",
+        platform: "LinkedIn",
+        jobUrl: "https://www.metacareers.com/jobs/example",
+        campaign: "Full Stack Remote",
+        salary: "$150,000 - $220,000",
+        notes: ""
+    },
+    {
+        id: 3,
+        jobTitle: "Software Engineer II",
+        company: "Amazon",
+        location: "Seattle, WA",
+        status: "interview",
+        appliedDate: "2026-02-04T09:15:00",
+        platform: "Greenhouse",
+        jobUrl: "https://amazon.jobs/example",
+        campaign: "Backend Roles",
+        salary: "$130,000 - $185,000",
+        notes: "Interview scheduled for Feb 15"
+    },
+    {
+        id: 4,
+        jobTitle: "DevOps Engineer",
+        company: "Netflix",
+        location: "Los Gatos, CA",
+        status: "rejected",
+        appliedDate: "2026-02-02T11:45:00",
+        platform: "Workday",
+        jobUrl: "https://jobs.netflix.com/example",
+        campaign: "DevOps Positions",
+        salary: "$145,000 - $210,000",
+        notes: ""
+    },
+    {
+        id: 5,
+        jobTitle: "Backend Developer",
+        company: "Stripe",
+        location: "San Francisco, CA",
+        status: "reviewing",
+        appliedDate: "2026-01-31T16:00:00",
+        platform: "Greenhouse",
+        jobUrl: "https://stripe.com/jobs/example",
+        campaign: "Backend Roles",
+        salary: "$135,000 - $195,000",
+        notes: ""
+    },
+    {
+        id: 6,
+        jobTitle: "React Developer",
+        company: "Airbnb",
+        location: "Remote",
+        status: "pending",
+        appliedDate: "2026-02-05T13:30:00",
+        platform: "Indeed",
+        jobUrl: "https://careers.airbnb.com/example",
+        campaign: "Frontend Positions",
+        salary: "$125,000 - $175,000",
+        notes: ""
+    },
+    {
+        id: 7,
+        jobTitle: "Product Engineer",
+        company: "Notion",
+        location: "San Francisco, CA",
+        status: "interview",
+        appliedDate: "2026-02-03T10:00:00",
+        platform: "LinkedIn",
+        jobUrl: "https://notion.so/careers/example",
+        campaign: "Product Roles",
+        salary: "$140,000 - $190,000",
+        notes: "Second round interview next week"
+    },
+    {
+        id: 8,
+        jobTitle: "Frontend Engineer",
+        company: "Figma",
+        location: "Remote",
+        status: "reviewing",
+        appliedDate: "2026-02-01T15:20:00",
+        platform: "Greenhouse",
+        jobUrl: "https://figma.com/careers/example",
+        campaign: "Frontend Positions",
+        salary: "$145,000 - $200,000",
+        notes: ""
     }
-};
+];
+
+// ========================================
+// State Management
+// ========================================
+
+let currentView = 'grid';
+let currentFilter = 'all';
+let currentSort = 'date-desc';
+let currentPlatform = 'all';
+let searchQuery = '';
+let currentPage = 1;
+let itemsPerPage = 12;
+
+// ========================================
+// View Management
+// ========================================
+
+function switchView(view) {
+    currentView = view;
+    
+    // Update active button
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.view === view) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Show/hide appropriate containers
+    const gridContainer = document.getElementById('applicationsContainer');
+    const kanbanView = document.getElementById('kanbanView');
+    
+    if (view === 'kanban') {
+        gridContainer.style.display = 'none';
+        kanbanView.style.display = 'grid';
+        renderKanbanView();
+    } else {
+        gridContainer.style.display = view === 'grid' ? 'grid' : 'block';
+        gridContainer.className = view === 'grid' ? 'applications-grid' : 'applications-list';
+        kanbanView.style.display = 'none';
+        renderApplications();
+    }
+}
+
+// ========================================
+// Filtering and Sorting
+// ========================================
+
+function getFilteredApplications() {
+    let filtered = [...sampleApplications];
+    
+    // Apply status filter
+    if (currentFilter !== 'all') {
+        filtered = filtered.filter(app => app.status === currentFilter);
+    }
+    
+    // Apply platform filter
+    if (currentPlatform !== 'all') {
+        filtered = filtered.filter(app => 
+            app.platform.toLowerCase() === currentPlatform.toLowerCase()
+        );
+    }
+    
+    // Apply search filter
+    if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(app =>
+            app.jobTitle.toLowerCase().includes(query) ||
+            app.company.toLowerCase().includes(query) ||
+            app.location.toLowerCase().includes(query)
+        );
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+        switch(currentSort) {
+            case 'date-desc':
+                return new Date(b.appliedDate) - new Date(a.appliedDate);
+            case 'date-asc':
+                return new Date(a.appliedDate) - new Date(b.appliedDate);
+            case 'company-asc':
+                return a.company.localeCompare(b.company);
+            case 'company-desc':
+                return b.company.localeCompare(a.company);
+            default:
+                return 0;
+        }
+    });
+    
+    return filtered;
+}
+
+// ========================================
+// Rendering Functions
+// ========================================
+
+function renderApplications() {
+    const container = document.getElementById('applicationsContainer');
+    const filtered = getFilteredApplications();
+    
+    // Pagination
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedApps = filtered.slice(startIndex, endIndex);
+    
+    if (currentView === 'grid') {
+        container.innerHTML = paginatedApps.map(app => createAppCard(app)).join('');
+    } else {
+        container.innerHTML = paginatedApps.map(app => createAppListItem(app)).join('');
+    }
+    
+    // Add click listeners
+    container.querySelectorAll('.app-card, .app-list-item').forEach((item, index) => {
+        item.addEventListener('click', () => openAppDetails(paginatedApps[index]));
+    });
+    
+    updatePagination(filtered.length);
+}
+
+function createAppCard(app) {
+    const gradient = getRandomGradient();
+    const initial = app.company.charAt(0).toUpperCase();
+    
+    return `
+        <div class="app-card" data-id="${app.id}">
+            <div class="app-card-header">
+                <div class="app-card-logo" style="background: ${gradient};">${initial}</div>
+                <div class="app-card-info">
+                    <h3 class="app-card-title">${app.jobTitle}</h3>
+                    <p class="app-card-company">${app.company}</p>
+                    <p class="app-card-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        ${app.location}
+                    </p>
+                </div>
+                <span class="status-badge ${app.status}">${capitalize(app.status)}</span>
+            </div>
+            <div class="app-card-meta">
+                <span class="app-card-date">${formatDate(app.appliedDate)}</span>
+                <span class="app-card-platform">${app.platform}</span>
+            </div>
+        </div>
+    `;
+}
+
+function createAppListItem(app) {
+    const gradient = getRandomGradient();
+    const initial = app.company.charAt(0).toUpperCase();
+    
+    return `
+        <div class="app-list-item" data-id="${app.id}">
+            <div class="app-list-job">
+                <div class="app-list-logo" style="background: ${gradient};">${initial}</div>
+                <div>
+                    <div class="app-list-title">${app.jobTitle}</div>
+                    <div class="app-list-company">${app.company}</div>
+                </div>
+            </div>
+            <div class="app-list-location">${app.location}</div>
+            <div class="app-list-date">${formatDate(app.appliedDate)}</div>
+            <div class="app-list-platform">${app.platform}</div>
+            <span class="status-badge ${app.status}">${capitalize(app.status)}</span>
+        </div>
+    `;
+}
+
+function renderKanbanView() {
+    const statuses = ['pending', 'reviewing', 'interview', 'rejected'];
+    
+    statuses.forEach(status => {
+        const container = document.querySelector(`.kanban-cards[data-status="${status}"]`);
+        const apps = sampleApplications.filter(app => app.status === status);
+        
+        container.innerHTML = apps.map(app => createKanbanCard(app)).join('');
+        
+        // Add click listeners
+        container.querySelectorAll('.kanban-card').forEach((card, index) => {
+            card.addEventListener('click', () => openAppDetails(apps[index]));
+        });
+    });
+}
+
+function createKanbanCard(app) {
+    return `
+        <div class="kanban-card" data-id="${app.id}">
+            <div class="kanban-card-title">${app.jobTitle}</div>
+            <div class="kanban-card-company">${app.company}</div>
+            <div class="kanban-card-date">${formatDate(app.appliedDate)}</div>
+        </div>
+    `;
+}
+
+// ========================================
+// Application Details Modal
+// ========================================
+
+function openAppDetails(app) {
+    const modal = document.getElementById('appDetailsModal');
+    
+    // Populate modal with data
+    document.getElementById('modalJobTitle').textContent = app.jobTitle;
+    document.getElementById('modalCompany').textContent = app.company;
+    document.getElementById('modalLocation').textContent = app.location;
+    document.getElementById('modalPlatform').textContent = app.platform;
+    document.getElementById('modalStatus').textContent = capitalize(app.status);
+    document.getElementById('modalStatus').className = `status-badge ${app.status}`;
+    document.getElementById('modalDate').textContent = new Date(app.appliedDate).toLocaleDateString();
+    document.getElementById('modalCampaign').textContent = app.campaign;
+    document.getElementById('modalJobUrl').href = app.jobUrl;
+    document.getElementById('modalSalary').textContent = app.salary;
+    document.getElementById('modalNotes').value = app.notes;
+    
+    modal.classList.add('active');
+}
+
+function closeAppDetailsModal() {
+    const modal = document.getElementById('appDetailsModal');
+    modal.classList.remove('active');
+}
+
+// ========================================
+// Pagination
+// ========================================
+
+function updatePagination(totalItems) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    document.getElementById('currentPage').textContent = currentPage;
+    document.getElementById('totalPages').textContent = totalPages;
+    
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+}
 
 // ========================================
 // Utility Functions
 // ========================================
 
-/**
- * Make a request to n8n webhook
- * @param {string} url - The webhook URL
- * @param {object} data - Data to send
- * @param {string} method - HTTP method (GET, POST, etc.)
- */
-async function callWebhook(url, data = {}, method = 'POST') {
-    try {
-        const options = {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-
-        // Only add body for POST/PUT requests
-        if (method === 'POST' || method === 'PUT') {
-            options.body = JSON.stringify(data);
-        }
-
-        const response = await fetch(url, options);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        console.error('Webhook call failed:', error);
-        showNotification('Error: ' + error.message, 'error');
-        throw error;
-    }
-}
-
-/**
- * Show notification to user
- * @param {string} message - The message to display
- * @param {string} type - Type of notification (success, error, info)
- */
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Add to page
-    document.body.appendChild(notification);
-    
-    // Style the notification
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        background: ${type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#3B82F6'};
-        color: white;
-        border-radius: 0.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-/**
- * Show loading state on button
- * @param {HTMLElement} button - The button element
- * @param {boolean} loading - Whether to show loading state
- */
-function setButtonLoading(button, loading) {
-    if (loading) {
-        button.disabled = true;
-        button.dataset.originalText = button.textContent;
-        button.textContent = 'Loading...';
-    } else {
-        button.disabled = false;
-        button.textContent = button.dataset.originalText;
-    }
-}
-
-// ========================================
-// Campaign Functions
-// ========================================
-
-/**
- * Open the new campaign modal
- */
-function openCampaignModal() {
-    const modal = document.getElementById('campaignModal');
-    modal.classList.add('active');
-}
-
-/**
- * Close the campaign modal
- */
-function closeCampaignModal() {
-    const modal = document.getElementById('campaignModal');
-    modal.classList.remove('active');
-    
-    // Reset form
-    document.getElementById('campaignForm').reset();
-}
-
-/**
- * Create a new job application campaign from form data
- */
-async function createNewCampaign(formData) {
-    // Get form values
-    const campaignName = formData.get('campaignName');
-    const jobTitle = formData.get('jobTitle');
-    const location = formData.get('location');
-    const minSalary = formData.get('minSalary');
-    const maxSalary = formData.get('maxSalary');
-    const keywords = formData.get('keywords');
-    const notes = formData.get('notes');
-    
-    // Get selected platforms (checkboxes)
-    const platforms = formData.getAll('platforms');
-    
-    // Get selected employment types (checkboxes)
-    const employmentTypes = formData.getAll('employmentType');
-    
-    // Validate at least one platform is selected
-    if (platforms.length === 0) {
-        showNotification('Please select at least one platform', 'error');
-        return;
-    }
-    
-    const data = {
-        campaignName: campaignName,
-        jobTitle: jobTitle,
-        location: location || '',
-        platforms: platforms,
-        employmentTypes: employmentTypes,
-        minSalary: minSalary || null,
-        maxSalary: maxSalary || null,
-        keywords: keywords ? keywords.split(',').map(k => k.trim()) : [],
-        notes: notes || '',
-        status: 'active',
-        createdAt: new Date().toISOString()
-    };
-    
-    try {
-        showNotification('Creating campaign...', 'info');
-        const result = await callWebhook(CONFIG.webhooks.createCampaign, data);
-        showNotification('Campaign created successfully!', 'success');
-        
-        // Close modal
-        closeCampaignModal();
-        
-        // Refresh campaigns list
-        loadCampaigns();
-    } catch (error) {
-        console.error('Failed to create campaign:', error);
-    }
-}
-
-/**
- * Load all campaigns from n8n
- */
-async function loadCampaigns() {
-    try {
-        const campaigns = await callWebhook(CONFIG.webhooks.getCampaigns, {}, 'GET');
-        
-        // Update the campaigns section in the UI
-        displayCampaigns(campaigns);
-    } catch (error) {
-        console.error('Failed to load campaigns:', error);
-    }
-}
-
-/**
- * Display campaigns in the UI
- * @param {Array} campaigns - Array of campaign objects
- */
-function displayCampaigns(campaigns) {
-    const campaignsList = document.querySelector('.campaigns-list');
-    if (!campaignsList) return;
-    
-    // Clear existing campaigns
-    campaignsList.innerHTML = '';
-    
-    // Add each campaign
-    campaigns.forEach(campaign => {
-        const campaignCard = createCampaignCard(campaign);
-        campaignsList.appendChild(campaignCard);
-    });
-}
-
-/**
- * Create a campaign card element
- * @param {Object} campaign - Campaign data
- * @returns {HTMLElement} - Campaign card element
- */
-function createCampaignCard(campaign) {
-    const card = document.createElement('div');
-    card.className = 'campaign-card';
-    
-    const statusClass = campaign.status === 'active' ? 'active' : 'paused';
-    const progressPercent = campaign.progress || 0;
-    
-    card.innerHTML = `
-        <div class="campaign-header">
-            <h4>${campaign.name}</h4>
-            <span class="campaign-status ${statusClass}">${campaign.status}</span>
-        </div>
-        <div class="campaign-stats">
-            <div class="campaign-stat">
-                <span class="stat-number">${campaign.applied || 0}</span>
-                <span class="stat-text">Applied</span>
-            </div>
-            <div class="campaign-stat">
-                <span class="stat-number">${campaign.responses || 0}</span>
-                <span class="stat-text">Responses</span>
-            </div>
-            <div class="campaign-stat">
-                <span class="stat-number">${campaign.interviews || 0}</span>
-                <span class="stat-text">Interviews</span>
-            </div>
-        </div>
-        <div class="campaign-progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${progressPercent}%;"></div>
-            </div>
-            <span class="progress-text">${progressPercent}% Complete</span>
-        </div>
-    `;
-    
-    return card;
-}
-
-// ========================================
-// Application Functions
-// ========================================
-
-/**
- * Load recent applications from n8n
- */
-async function loadApplications() {
-    try {
-        const applications = await callWebhook(CONFIG.webhooks.getApplications, {}, 'GET');
-        
-        // Update the applications section in the UI
-        displayApplications(applications);
-    } catch (error) {
-        console.error('Failed to load applications:', error);
-    }
-}
-
-/**
- * Display applications in the UI
- * @param {Array} applications - Array of application objects
- */
-function displayApplications(applications) {
-    const applicationsList = document.querySelector('.applications-list');
-    if (!applicationsList) return;
-    
-    // Clear existing applications
-    applicationsList.innerHTML = '';
-    
-    // Add each application
-    applications.forEach(app => {
-        const appItem = createApplicationItem(app);
-        applicationsList.appendChild(appItem);
-    });
-}
-
-/**
- * Create an application item element
- * @param {Object} app - Application data
- * @returns {HTMLElement} - Application item element
- */
-function createApplicationItem(app) {
-    const item = document.createElement('div');
-    item.className = 'application-item';
-    
-    // Get company initial
-    const initial = app.company ? app.company.charAt(0).toUpperCase() : '?';
-    
-    // Random gradient for company logo
+function getRandomGradient() {
     const gradients = [
         'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
         'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+        'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
     ];
-    const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
-    
-    item.innerHTML = `
-        <div class="company-logo" style="background: ${randomGradient};">${initial}</div>
-        <div class="application-info">
-            <h4>${app.jobTitle}</h4>
-            <p class="company">${app.company} • ${app.location}</p>
-            <p class="date">Applied ${formatDate(app.appliedDate)}</p>
-        </div>
-        <span class="status-badge ${app.status.toLowerCase()}">${app.status}</span>
-    `;
-    
-    return item;
+    return gradients[Math.floor(Math.random() * gradients.length)];
 }
 
-/**
- * Format date to relative time (e.g., "2 hours ago")
- * @param {string} dateString - ISO date string
- * @returns {string} - Formatted date
- */
 function formatDate(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -347,251 +379,87 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
-// ========================================
-// Stats Functions
-// ========================================
-
-/**
- * Load and update dashboard stats
- */
-async function loadStats() {
-    try {
-        const stats = await callWebhook(CONFIG.webhooks.getStats, {}, 'GET');
-        
-        // Update stats in UI
-        updateStats(stats);
-    } catch (error) {
-        console.error('Failed to load stats:', error);
-    }
-}
-
-/**
- * Update stats cards in the UI
- * @param {Object} stats - Stats data
- */
-function updateStats(stats) {
-    // Update total applications
-    const totalApps = document.querySelector('.stat-card:nth-child(1) .stat-value');
-    if (totalApps) totalApps.textContent = stats.totalApplications || 0;
-    
-    // Update active campaigns
-    const activeCampaigns = document.querySelector('.stat-card:nth-child(2) .stat-value');
-    if (activeCampaigns) activeCampaigns.textContent = stats.activeCampaigns || 0;
-    
-    // Update response rate
-    const responseRate = document.querySelector('.stat-card:nth-child(3) .stat-value');
-    if (responseRate) responseRate.textContent = `${stats.responseRate || 0}%`;
-    
-    // Update interviews
-    const interviews = document.querySelector('.stat-card:nth-child(4) .stat-value');
-    if (interviews) interviews.textContent = stats.interviews || 0;
-}
-
-// ========================================
-// Other Action Functions
-// ========================================
-
-/**
- * Handle resume upload
- */
-async function handleResumeUpload() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.pdf,.doc,.docx';
-    
-    input.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        // Convert file to base64
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            const base64 = event.target.result.split(',')[1];
-            
-            try {
-                showNotification('Uploading resume...', 'info');
-                
-                const result = await callWebhook(CONFIG.webhooks.uploadResume, {
-                    filename: file.name,
-                    fileData: base64,
-                    fileType: file.type
-                });
-                
-                showNotification('Resume uploaded successfully!', 'success');
-            } catch (error) {
-                console.error('Failed to upload resume:', error);
-            }
-        };
-        
-        reader.readAsDataURL(file);
-    };
-    
-    input.click();
-}
-
-/**
- * Search for jobs
- */
-async function searchJobs() {
-    const jobTitle = prompt('What job title are you looking for?');
-    if (!jobTitle) return;
-    
-    const location = prompt('Location (or "Remote"):');
-    if (!location) return;
-    
-    try {
-        showNotification('Searching for jobs...', 'info');
-        
-        const result = await callWebhook(CONFIG.webhooks.findJobs, {
-            jobTitle: jobTitle,
-            location: location,
-            platforms: ['Greenhouse', 'LinkedIn', 'Indeed']
-        });
-        
-        showNotification(`Found ${result.count || 0} jobs!`, 'success');
-        
-        // You could display results in a modal or redirect to a jobs page
-        console.log('Jobs found:', result);
-    } catch (error) {
-        console.error('Failed to search jobs:', error);
-    }
-}
-
-/**
- * Open settings page
- */
-function openSettings() {
-    showNotification('Settings page coming soon!', 'info');
-    // In the future, this could open a modal or navigate to settings page
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // ========================================
 // Event Listeners
 // ========================================
 
-/**
- * Initialize the application when DOM is ready
- */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('JobAutomate initialized!');
+    // View toggle
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.dataset.view));
+    });
     
-    // Attach event listeners to action buttons
-    const actionButtons = document.querySelectorAll('.action-btn');
-    actionButtons.forEach(button => {
-        const buttonText = button.querySelector('span').textContent.trim();
-        
-        button.addEventListener('click', async function() {
-            switch(buttonText) {
-                case 'New Campaign':
-                    openCampaignModal();
-                    break;
-                case 'Upload Resume':
-                    await handleResumeUpload();
-                    break;
-                case 'Find Jobs':
-                    await searchJobs();
-                    break;
-                case 'Settings':
-                    openSettings();
-                    break;
-            }
+    // Filter pills
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            currentFilter = pill.dataset.status;
+            currentPage = 1;
+            renderApplications();
         });
     });
     
-    // Modal event listeners
-    const modal = document.getElementById('campaignModal');
-    const closeModalBtn = document.getElementById('closeModal');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const campaignForm = document.getElementById('campaignForm');
+    // Sort and platform filters
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        renderApplications();
+    });
     
-    // Close modal when clicking X button
-    closeModalBtn.addEventListener('click', closeCampaignModal);
+    document.getElementById('platformFilter').addEventListener('change', (e) => {
+        currentPlatform = e.target.value;
+        currentPage = 1;
+        renderApplications();
+    });
     
-    // Close modal when clicking Cancel button
-    cancelBtn.addEventListener('click', closeCampaignModal);
+    // Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        currentPage = 1;
+        renderApplications();
+    });
     
-    // Close modal when clicking outside of it
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeCampaignModal();
+    // Pagination
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderApplications();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
     
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeCampaignModal();
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        currentPage++;
+        renderApplications();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Modal close
+    document.getElementById('closeDetailsModal').addEventListener('click', closeAppDetailsModal);
+    document.getElementById('closeDetailsBtn').addEventListener('click', closeAppDetailsModal);
+    
+    // Close modal on outside click
+    document.getElementById('appDetailsModal').addEventListener('click', (e) => {
+        if (e.target.id === 'appDetailsModal') {
+            closeAppDetailsModal();
         }
     });
     
-    // Handle form submission
-    campaignForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(campaignForm);
-        const submitBtn = campaignForm.querySelector('button[type="submit"]');
-        
-        setButtonLoading(submitBtn, true);
-        
-        try {
-            await createNewCampaign(formData);
-        } finally {
-            setButtonLoading(submitBtn, false);
-        }
+    // Export button (placeholder)
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        alert('Export functionality coming soon!');
     });
     
-    // Load initial data
-    loadDashboardData();
+    // Save notes button (placeholder)
+    document.getElementById('saveNotesBtn').addEventListener('click', () => {
+        const notes = document.getElementById('modalNotes').value;
+        alert('Notes saved! (This will connect to n8n later)');
+    });
     
-    // Set up auto-refresh every 30 seconds
-    setInterval(loadDashboardData, 30000);
+    // Initial render
+    renderApplications();
 });
-
-/**
- * Load all dashboard data
- */
-async function loadDashboardData() {
-    try {
-        // Load all data in parallel
-        await Promise.all([
-            loadStats(),
-            loadApplications(),
-            loadCampaigns()
-        ]);
-    } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-    }
-}
-
-// ========================================
-// Add CSS animations
-// ========================================
-
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-//installed node js
-
