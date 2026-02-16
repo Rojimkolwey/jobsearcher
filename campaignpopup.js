@@ -309,3 +309,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize first step
     showStep(1);
 });
+
+
+
+// Add this code to handle the New Campaign button click
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the New Campaign button
+    const newCampaignBtn = document.querySelector('#newCampaignBtn');
+    
+    // Or if you have multiple buttons, use a more specific selector
+    // const newCampaignBtn = document.querySelector('.btn-primary');
+    
+    if (newCampaignBtn) {
+        newCampaignBtn.addEventListener('click', function() {
+            // Calculate center position for popup
+            const width = 800;
+            const height = 700;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            
+            // Open the campaign popup
+            window.open(
+                'campaignpopup.html',  // Your campaign modal file
+                'Create Campaign',      // Window name
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
+        });
+        
+        console.log('New Campaign button linked successfully!');
+    } else {
+        console.error('New Campaign button not found!');
+    }
+});
