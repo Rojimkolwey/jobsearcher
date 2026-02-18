@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Applications - JobAutomate</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="applications.js" defer></script>
+    <link rel="stylesheet" href="styles-consolidated.css">
+    <script src="applications-updated.js" defer></script>
+    <script src="campaignpopup-updated.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -43,7 +44,7 @@
                             <line x1="12" y1="5" x2="12" y2="19"/>
                             <line x1="5" y1="12" x2="19" y2="12"/>
                         </svg>
-                        <span href="campaignpopup.html">New Campaign</span>
+                        <span>New Campaign</span>
                     </button>
                     <button class="btn-secondary" id="exportBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -69,7 +70,6 @@
                         placeholder="Search by company, position, or location..."
                     >
                 </div>
-
                 <div class="filter-pills">
                     <button class="filter-pill active" data-status="all">
                         All <span class="pill-count">247</span>
@@ -87,7 +87,6 @@
                         Rejected <span class="pill-count">33</span>
                     </button>
                 </div>
-
                 <div class="filter-controls">
                     <select id="sortSelect" class="filter-select">
                         <option value="date-desc">Latest First</option>
@@ -95,7 +94,6 @@
                         <option value="company-asc">Company A-Z</option>
                         <option value="company-desc">Company Z-A</option>
                     </select>
-
                     <select id="platformFilter" class="filter-select">
                         <option value="all">All Platforms</option>
                         <option value="greenhouse">Greenhouse</option>
@@ -153,7 +151,6 @@
                         <!-- Cards will be inserted here -->
                     </div>
                 </div>
-
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Reviewing</h3>
@@ -163,7 +160,6 @@
                         <!-- Cards will be inserted here -->
                     </div>
                 </div>
-
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Interview</h3>
@@ -173,7 +169,6 @@
                         <!-- Cards will be inserted here -->
                     </div>
                 </div>
-
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Rejected</h3>
@@ -206,131 +201,315 @@
         </main>
     </div>
 
-    <!-- New Campaign Modal -->
+    <!-- NEW CAMPAIGN MODAL (Enhanced Multi-Step Version) -->
     <div id="campaignModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
             <div class="modal-header">
-                <h2>Create New Campaign</h2>
-                <button class="modal-close" id="closeCampaignModal">&times;</button>
+                <div class="modal-title-section">
+                    <div class="modal-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2>Create New Campaign</h2>
+                        <p class="modal-subtitle">Set up an automated job application campaign</p>
+                    </div>
+                </div>
+                <button class="modal-close" id="closeModal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
             </div>
+
             <form id="campaignForm" class="modal-body">
-                <div class="form-group">
-                    <label for="campaignName">Campaign Name *</label>
-                    <input 
-                        type="text" 
-                        id="campaignName" 
-                        name="campaignName" 
-                        placeholder="e.g., Frontend Developer Positions"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="jobTitle">Job Title *</label>
-                    <input 
-                        type="text" 
-                        id="jobTitle" 
-                        name="jobTitle" 
-                        placeholder="e.g., Frontend Developer, Full Stack Engineer"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input 
-                        type="text" 
-                        id="location" 
-                        name="location" 
-                        placeholder="e.g., Remote, San Francisco, CA"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label>Platforms *</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Greenhouse" checked>
-                            <span>Greenhouse</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="LinkedIn">
-                            <span>LinkedIn</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Indeed">
-                            <span>Indeed</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="platforms" value="Workday">
-                            <span>Workday</span>
-                        </label>
+                <!-- Step Indicator -->
+                <div class="steps-indicator">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Basic Info</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Job Criteria</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Preferences</div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="minSalary">Min Salary</label>
-                        <input 
-                            type="number" 
-                            id="minSalary" 
-                            name="minSalary" 
-                            placeholder="e.g., 80000"
-                        >
+                <!-- Step 1: Basic Info -->
+                <div class="form-step active" id="step1">
+                    <div class="form-section">
+                        <h3 class="section-title">Campaign Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="campaignName">
+                                Campaign Name *
+                                <span class="label-hint">Give your campaign a memorable name</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="campaignName" 
+                                name="campaignName" 
+                                placeholder="e.g., Frontend Developer Positions"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobTitle">
+                                Job Title *
+                                <span class="label-hint">What position are you looking for?</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="jobTitle" 
+                                name="jobTitle" 
+                                placeholder="e.g., Frontend Developer, Software Engineer"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="location">
+                                    Location
+                                    <span class="label-hint">City, state, or "Remote"</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    name="location" 
+                                    placeholder="e.g., San Francisco, CA or Remote"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="experienceLevel">
+                                    Experience Level
+                                </label>
+                                <select id="experienceLevel" name="experienceLevel">
+                                    <option value="">Any</option>
+                                    <option value="entry">Entry Level</option>
+                                    <option value="mid">Mid Level</option>
+                                    <option value="senior">Senior</option>
+                                    <option value="lead">Lead/Principal</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="maxSalary">Max Salary</label>
-                        <input 
-                            type="number" 
-                            id="maxSalary" 
-                            name="maxSalary" 
-                            placeholder="e.g., 150000"
-                        >
+                <!-- Step 2: Job Criteria -->
+                <div class="form-step" id="step2">
+                    <div class="form-section">
+                        <h3 class="section-title">Where to Apply</h3>
+                        
+                        <div class="form-group">
+                            <label>Platforms * <span class="label-hint">Select at least one</span></label>
+                            <div class="platform-grid">
+                                <label class="platform-card">
+                                    <input type="checkbox" name="platforms" value="Greenhouse" checked>
+                                    <div class="platform-content">
+                                        <div class="platform-icon greenhouse">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <circle cx="12" cy="12" r="10"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="platform-name">Greenhouse</div>
+                                            <div class="platform-desc">Most tech companies</div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label class="platform-card">
+                                    <input type="checkbox" name="platforms" value="LinkedIn">
+                                    <div class="platform-content">
+                                        <div class="platform-icon linkedin">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="platform-name">LinkedIn</div>
+                                            <div class="platform-desc">Professional network</div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label class="platform-card">
+                                    <input type="checkbox" name="platforms" value="Indeed">
+                                    <div class="platform-content">
+                                        <div class="platform-icon indeed">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="platform-name">Indeed</div>
+                                            <div class="platform-desc">Largest job board</div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label class="platform-card">
+                                    <input type="checkbox" name="platforms" value="Workday">
+                                    <div class="platform-content">
+                                        <div class="platform-icon workday">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                <polygon points="12,2 2,7 12,12 22,7"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="platform-name">Workday</div>
+                                            <div class="platform-desc">Enterprise companies</div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Employment Type</label>
+                            <div class="checkbox-row">
+                                <label class="checkbox-pill">
+                                    <input type="checkbox" name="employmentType" value="Full-time" checked>
+                                    <span>Full-time</span>
+                                </label>
+                                <label class="checkbox-pill">
+                                    <input type="checkbox" name="employmentType" value="Part-time">
+                                    <span>Part-time</span>
+                                </label>
+                                <label class="checkbox-pill">
+                                    <input type="checkbox" name="employmentType" value="Contract">
+                                    <span>Contract</span>
+                                </label>
+                                <label class="checkbox-pill">
+                                    <input type="checkbox" name="employmentType" value="Internship">
+                                    <span>Internship</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="keywords">Keywords (comma separated)</label>
-                    <input 
-                        type="text" 
-                        id="keywords" 
-                        name="keywords" 
-                        placeholder="e.g., React, JavaScript, TypeScript"
-                    >
-                </div>
+                <!-- Step 3: Preferences -->
+                <div class="form-step" id="step3">
+                    <div class="form-section">
+                        <h3 class="section-title">Salary & Requirements</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="minSalary">
+                                    Minimum Salary
+                                    <span class="label-hint">Annual USD</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon">$</span>
+                                    <input 
+                                        type="number" 
+                                        id="minSalary" 
+                                        name="minSalary" 
+                                        placeholder="80,000"
+                                        min="0"
+                                        step="1000"
+                                    >
+                                </div>
+                            </div>
 
-                <div class="form-group">
-                    <label>Employment Type</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Full-time" checked>
-                            <span>Full-time</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Part-time">
-                            <span>Part-time</span>
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="employmentType" value="Contract">
-                            <span>Contract</span>
-                        </label>
+                            <div class="form-group">
+                                <label for="maxSalary">
+                                    Maximum Salary
+                                    <span class="label-hint">Annual USD</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon">$</span>
+                                    <input 
+                                        type="number" 
+                                        id="maxSalary" 
+                                        name="maxSalary" 
+                                        placeholder="150,000"
+                                        min="0"
+                                        step="1000"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="keywords">
+                                Required Skills / Keywords
+                                <span class="label-hint">Comma separated (e.g., React, TypeScript, Node.js)</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="keywords" 
+                                name="keywords" 
+                                placeholder="React, JavaScript, TypeScript, CSS"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">
+                                Additional Notes
+                                <span class="label-hint">Any preferences or requirements</span>
+                            </label>
+                            <textarea 
+                                id="notes" 
+                                name="notes" 
+                                rows="4" 
+                                placeholder="e.g., Prefer companies with good work-life balance, remote-first culture, etc."
+                            ></textarea>
+                        </div>
+
+                        <div class="info-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                            <div>
+                                <strong>How it works:</strong> Once created, this campaign will automatically search for jobs matching your criteria and apply on your behalf. You can pause or modify it anytime.
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea 
-                        id="notes" 
-                        name="notes" 
-                        rows="3" 
-                        placeholder="Any additional information or preferences..."
-                    ></textarea>
-                </div>
-
+                <!-- Navigation Buttons -->
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary" id="cancelCampaignBtn">Cancel</button>
-                    <button type="submit" class="btn-primary">Create Campaign</button>
+                    <div class="footer-left">
+                        <button type="button" class="btn-text" id="cancelBtn">Cancel</button>
+                    </div>
+                    <div class="footer-right">
+                        <button type="button" class="btn-secondary" id="prevBtn" style="display: none;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            Previous
+                        </button>
+                        <button type="button" class="btn-primary" id="nextBtn">
+                            Next
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitBtn" style="display: none;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Create Campaign
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -360,7 +539,6 @@
                             <span class="detail-value" id="modalPlatform">Greenhouse</span>
                         </div>
                     </div>
-
                     <div class="app-detail-section">
                         <h3>Application Status</h3>
                         <div class="detail-item">
@@ -376,7 +554,6 @@
                             <span class="detail-value" id="modalCampaign">Frontend Positions</span>
                         </div>
                     </div>
-
                     <div class="app-detail-section full-width">
                         <h3>Job Details</h3>
                         <div class="detail-item">
@@ -388,13 +565,11 @@
                             <span class="detail-value" id="modalSalary">$120,000 - $180,000</span>
                         </div>
                     </div>
-
                     <div class="app-detail-section full-width">
                         <h3>Notes</h3>
                         <textarea id="modalNotes" class="notes-textarea" placeholder="Add notes about this application..."></textarea>
                     </div>
                 </div>
-
                 <div class="modal-footer">
                     <button class="btn-danger">Delete Application</button>
                     <div>
