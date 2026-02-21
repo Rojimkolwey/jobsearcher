@@ -1097,6 +1097,15 @@ input::placeholder {
     }
 }
 
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
 /* ==================== NOTIFICATIONS ==================== */
 .notification {
     position: fixed;
