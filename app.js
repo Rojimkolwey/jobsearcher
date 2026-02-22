@@ -1,30 +1,20 @@
-// app.js - Main application JavaScript with modal trigger
+// app.js - Fixed version with guaranteed step navigation
+
+console.log('=== APP.JS LOADING ===');
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('App.js loaded');
+    console.log('=== DOM READY ===');
     
-    // ==================== MODAL TRIGGER ====================
+    // Wait a bit for modal HTML to be fully parsed
+    setTimeout(initializeApp, 100);
+});
+
+function initializeApp() {
+    console.log('=== INITIALIZING APP ===');
+    
+    // ==================== GET ALL ELEMENTS ====================
     const newCampaignBtn = document.getElementById('newCampaignBtn');
     const campaignModal = document.getElementById('campaignModal');
-    
-    console.log('New Campaign Button:', newCampaignBtn);
-    console.log('Campaign Modal:', campaignModal);
-    
-    // Open campaign modal when button is clicked
-    if (newCampaignBtn && campaignModal) {
-        console.log('Setting up modal trigger...');
-        newCampaignBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('New Campaign button clicked!');
-            campaignModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    } else {
-        console.error('Modal elements not found!');
-    }
-    
-    // ==================== CAMPAIGN MODAL FUNCTIONALITY ====================
-    const modal = document.getElementById('campaignModal');
     const closeModalBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -32,58 +22,82 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const form = document.getElementById('campaignForm');
     
+    console.log('Elements found:');
+    console.log('✓ newCampaignBtn:', !!newCampaignBtn);
+    console.log('✓ campaignModal:', !!campaignModal);
+    console.log('✓ closeModalBtn:', !!closeModalBtn);
+    console.log('✓ cancelBtn:', !!cancelBtn);
+    console.log('✓ nextBtn:', !!nextBtn);
+    console.log('✓ prevBtn:', !!prevBtn);
+    console.log('✓ submitBtn:', !!submitBtn);
+    console.log('✓ form:', !!form);
+    
+    // ==================== STATE ====================
     let currentStep = 1;
     const totalSteps = 3;
     let campaignDraft = {};
     
-    // Close modal function
+    // ==================== OPEN MODAL ====================
+    if (newCampaignBtn && campaignModal) {
+        console.log('Setting up New Campaign button...');
+        newCampaignBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('>>> Opening modal...');
+            campaignModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateStepDisplay();
+        });
+    }
+    
+    // ==================== CLOSE MODAL ====================
     function closeModal() {
-        if (modal) {
-            modal.classList.remove('active');
+        console.log('>>> Closing modal...');
+        if (campaignModal) {
+            campaignModal.classList.remove('active');
             document.body.style.overflow = '';
             resetForm();
         }
     }
     
-    // Reset form
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeModal);
+    }
+    
+    if (campaignModal) {
+        campaignModal.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+    }
+    
+    // ==================== RESET FORM ====================
     function resetForm() {
+        console.log('>>> Resetting form...');
         currentStep = 1;
         campaignDraft = {};
         if (form) form.reset();
-        updateStepDisplay();
         clearErrors();
+        updateStepDisplay();
     }
     
-    // Clear errors
+    // ==================== CLEAR ERRORS ====================
     function clearErrors() {
         const errorInputs = document.querySelectorAll('.error');
         errorInputs.forEach(input => input.classList.remove('error'));
     }
     
-    // Save step data
-    function saveStepData(step) {
-        const currentFormStep = document.getElementById(`step${step}`);
-        if (!currentFormStep) return;
-        
-        const inputs = currentFormStep.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            if (input.type === 'checkbox') {
-                if (!campaignDraft[input.name]) {
-                    campaignDraft[input.name] = [];
-                }
-                if (input.checked && !campaignDraft[input.name].includes(input.value)) {
-                    campaignDraft[input.name].push(input.value);
-                }
-            } else {
-                campaignDraft[input.name] = input.value;
-            }
-        });
-    }
-    
-    // Update step display
+    // ==================== UPDATE STEP DISPLAY ====================
     function updateStepDisplay() {
+        console.log('>>> Updating display to step:', currentStep);
+        
+        // Update step indicators
         const steps = document.querySelectorAll('.step');
-        const formSteps = document.querySelectorAll('.form-step');
+        console.log('Step indicators found:', steps.length);
         
         steps.forEach((step, index) => {
             if (index < currentStep) {
@@ -93,94 +107,108 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Update form steps
+        const formSteps = document.querySelectorAll('.form-step');
+        console.log('Form steps found:', formSteps.length);
+        
         formSteps.forEach((step, index) => {
-            if (index === currentStep - 1) {
+            const stepNum = index + 1;
+            if (stepNum === currentStep) {
+                console.log(`  -> Showing step ${stepNum}`);
                 step.style.display = 'block';
-                setTimeout(() => step.classList.add('active'), 10);
+                step.classList.add('active');
             } else {
+                console.log(`  -> Hiding step ${stepNum}`);
                 step.classList.remove('active');
-                setTimeout(() => step.style.display = 'none', 300);
+                step.style.display = 'none';
             }
         });
         
-        if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'flex';
-        if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'flex';
-        if (submitBtn) submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
-        
-        // Update next button text
-        if (nextBtn) {
-            if (currentStep === 1) {
-                nextBtn.innerHTML = `
-                    Next
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                `;
-            } else if (currentStep === 2) {
-                nextBtn.innerHTML = `
-                    Continue to Preferences
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"/>
-                    </svg>
-                `;
-            }
+        // Update buttons
+        if (prevBtn) {
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'flex';
         }
+        
+        if (nextBtn) {
+            nextBtn.style.display = currentStep === totalSteps ? 'none' : 'flex';
+        }
+        
+        if (submitBtn) {
+            submitBtn.style.display = currentStep === totalSteps ? 'flex' : 'none';
+        }
+        
+        console.log('Step display updated successfully');
     }
     
-    // Validate step
+    // ==================== VALIDATE STEP ====================
     function validateStep(step) {
-        const currentFormStep = document.getElementById(`step${step}`);
-        if (!currentFormStep) return true;
+        console.log('>>> Validating step:', step);
         
-        const requiredInputs = currentFormStep.querySelectorAll('input[required], select[required]');
+        const currentFormStep = document.getElementById(`step${step}`);
+        if (!currentFormStep) {
+            console.error('ERROR: Step element not found:', `step${step}`);
+            return false;
+        }
+        
+        const requiredInputs = currentFormStep.querySelectorAll('input[required]');
+        console.log('Required inputs found:', requiredInputs.length);
+        
         let isValid = true;
         let errors = [];
         
         clearErrors();
         
         requiredInputs.forEach(input => {
-            if (!input.value.trim()) {
+            const value = input.value.trim();
+            console.log(`  Checking ${input.name}: "${value}"`);
+            
+            if (!value) {
                 isValid = false;
                 input.classList.add('error');
-                const label = currentFormStep.querySelector(`label[for="${input.id}"]`);
-                if (label) {
-                    errors.push(label.textContent.split('*')[0].trim());
-                }
+                errors.push(input.name);
             }
         });
         
-        // Step 2: Platform validation
+        // Step 2: Check platforms
         if (step === 2) {
-            const platformCheckboxes = currentFormStep.querySelectorAll('input[name="platforms"]:checked');
-            if (platformCheckboxes.length === 0) {
+            const platformChecked = currentFormStep.querySelectorAll('input[name="platforms"]:checked');
+            console.log('Platforms selected:', platformChecked.length);
+            
+            if (platformChecked.length === 0) {
+                isValid = false;
                 showNotification('Please select at least one platform', 'error');
                 return false;
             }
         }
         
-        // Step 3: Salary validation
+        // Step 3: Check salary range
         if (step === 3) {
             const minSalary = document.getElementById('minSalary');
             const maxSalary = document.getElementById('maxSalary');
+            
             if (minSalary && maxSalary && minSalary.value && maxSalary.value) {
                 if (parseInt(minSalary.value) > parseInt(maxSalary.value)) {
-                    showNotification('Minimum salary cannot be greater than maximum salary', 'error');
-                    minSalary.classList.add('error');
-                    maxSalary.classList.add('error');
+                    isValid = false;
+                    showNotification('Min salary cannot exceed max salary', 'error');
                     return false;
                 }
             }
         }
         
-        if (!isValid && errors.length > 0) {
+        if (!isValid) {
+            console.log('Validation FAILED. Missing:', errors);
             showNotification(`Please fill in: ${errors.join(', ')}`, 'error');
+        } else {
+            console.log('Validation PASSED ✓');
         }
         
         return isValid;
     }
     
-    // Show notification
+    // ==================== SHOW NOTIFICATION ====================
     function showNotification(message, type = 'info') {
+        console.log(`Notification [${type}]:`, message);
+        
         const existingNotif = document.querySelector('.notification');
         if (existingNotif) existingNotif.remove();
         
@@ -205,50 +233,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }
     
-    // Event listeners for modal
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', closeModal);
-    }
-    
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', closeModal);
-    }
-    
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal-overlay')) {
-                closeModal();
-            }
-        });
-    }
-    
+    // ==================== NEXT BUTTON ====================
     if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
+        console.log('✓ Attaching Next button handler...');
+        
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('\n>>> NEXT BUTTON CLICKED <<<');
+            console.log('Current step:', currentStep);
+            
             if (validateStep(currentStep)) {
-                saveStepData(currentStep);
                 currentStep++;
+                console.log('Moving to step:', currentStep);
                 updateStepDisplay();
                 
                 if (currentStep === 2) {
-                    showNotification('Basic info saved! Now choose your platforms.', 'success');
+                    showNotification('Basic info saved! Choose your platforms.', 'success');
                 } else if (currentStep === 3) {
                     showNotification('Platforms selected! Almost done...', 'success');
                 }
             }
         });
+        
+        console.log('✓ Next button handler attached!');
+    } else {
+        console.error('ERROR: Next button not found!');
     }
     
+    // ==================== PREVIOUS BUTTON ====================
     if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
-            saveStepData(currentStep);
+        console.log('✓ Attaching Previous button handler...');
+        
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('\n>>> PREVIOUS BUTTON CLICKED <<<');
+            
             currentStep--;
+            console.log('Moving back to step:', currentStep);
             updateStepDisplay();
         });
     }
     
-    if (form) {
+    // ==================== SUBMIT BUTTON ====================
+    if (submitBtn && form) {
+        console.log('✓ Attaching Submit handler...');
+        
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('\n>>> FORM SUBMITTED <<<');
             
             if (!validateStep(currentStep)) {
                 return;
@@ -262,24 +294,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 location: formData.get('location') || 'Any',
                 experienceLevel: formData.get('experienceLevel') || 'Any',
                 platforms: formData.getAll('platforms'),
-                employmentType: formData.getAll('employmentType').length > 0 ? formData.getAll('employmentType') : ['Full-time'],
+                employmentType: formData.getAll('employmentType'),
                 minSalary: formData.get('minSalary') || null,
                 maxSalary: formData.get('maxSalary') || null,
-                keywords: formData.get('keywords') ? formData.get('keywords').split(',').map(k => k.trim()) : [],
+                keywords: formData.get('keywords') || '',
                 notes: formData.get('notes') || '',
                 status: 'active',
                 createdAt: new Date().toISOString(),
                 applicationsCount: 0
             };
             
-            console.log('Campaign created:', campaignData);
+            console.log('Campaign data:', campaignData);
             
-            // Store in localStorage
-            const existingCampaigns = JSON.parse(localStorage.getItem('jobCampaigns') || '[]');
-            existingCampaigns.push(campaignData);
-            localStorage.setItem('jobCampaigns', JSON.stringify(existingCampaigns));
+            // Save to localStorage
+            const campaigns = JSON.parse(localStorage.getItem('jobCampaigns') || '[]');
+            campaigns.push(campaignData);
+            localStorage.setItem('jobCampaigns', JSON.stringify(campaigns));
             
-            showNotification(`Campaign "${campaignData.campaignName}" created successfully! 🎉`, 'success');
+            showNotification(`Campaign "${campaignData.campaignName}" created! 🎉`, 'success');
             
             setTimeout(() => {
                 closeModal();
@@ -288,10 +320,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Initialize step display
-    updateStepDisplay();
-    
-    // ==================== YOUR OTHER APP FUNCTIONALITY ====================
-    // Add your existing application code here (filters, search, etc.)
-    
-});
+    console.log('=== APP INITIALIZED ===\n');
+}
+
+
+document.getElementById('campaignName').value
