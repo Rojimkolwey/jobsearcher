@@ -325,3 +325,4 @@ function initializeApp() {
 
 
 document.getElementById('campaignName').value
+console.log('we did it')
