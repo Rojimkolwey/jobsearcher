@@ -6,7 +6,6 @@
     <title>Applications - JobAutomate</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
-
 </head>
 <body>
     <div class="container">
@@ -147,36 +146,28 @@
                         <h3>Pending</h3>
                         <span class="kanban-count">89</span>
                     </div>
-                    <div class="kanban-cards" data-status="pending">
-                        <!-- Cards will be inserted here -->
-                    </div>
+                    <div class="kanban-cards" data-status="pending"></div>
                 </div>
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Reviewing</h3>
                         <span class="kanban-count">102</span>
                     </div>
-                    <div class="kanban-cards" data-status="reviewing">
-                        <!-- Cards will be inserted here -->
-                    </div>
+                    <div class="kanban-cards" data-status="reviewing"></div>
                 </div>
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Interview</h3>
                         <span class="kanban-count">23</span>
                     </div>
-                    <div class="kanban-cards" data-status="interview">
-                        <!-- Cards will be inserted here -->
-                    </div>
+                    <div class="kanban-cards" data-status="interview"></div>
                 </div>
                 <div class="kanban-column">
                     <div class="kanban-header">
                         <h3>Rejected</h3>
                         <span class="kanban-count">33</span>
                     </div>
-                    <div class="kanban-cards" data-status="rejected">
-                        <!-- Cards will be inserted here -->
-                    </div>
+                    <div class="kanban-cards" data-status="rejected"></div>
                 </div>
             </div>
 
@@ -201,27 +192,7 @@
         </main>
     </div>
 
-    <!-- NEW CAMPAIGN MODAL (Enhanced Multi-Step Version) -->
-    <div id="campaignModal" class="modal">
-        <div class="modal-overlay"></div>
-        <div class="modal-container">
-            <div class="modal-header">
-                <div class="modal-title-section">
-                    <div class="modal-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5"/>
-                            <path d="M2 12l10 5 10-5"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2>Create New Campaign</h2>
-                        <p class="modal-subtitle">Set up an automated job application campaign</p>
-                    </div>
-                </div>
-               <!-- INSTRUCTIONS: Replace your campaignModal section (from line ~220 to ~520) with this entire block -->
-
-    <!-- SINGLE-PAGE CAMPAIGN MODAL -->
+    <!-- CAMPAIGN MODAL - SINGLE PAGE FORM -->
     <div id="campaignModal" class="modal">
         <div class="modal-overlay"></div>
         <div class="modal-container">
@@ -249,7 +220,7 @@
 
             <form id="campaignForm" class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                 
-                <!-- Campaign Details Section -->
+                <!-- Campaign Details -->
                 <div class="form-section">
                     <h3 class="section-title">Campaign Details</h3>
                     
@@ -310,7 +281,7 @@
                     </div>
                 </div>
 
-                <!-- Platforms Section -->
+                <!-- Platforms -->
                 <div class="form-section">
                     <h3 class="section-title">Where to Apply</h3>
                     
@@ -402,7 +373,7 @@
                     </div>
                 </div>
 
-                <!-- Salary Section -->
+                <!-- Salary & Requirements -->
                 <div class="form-section">
                     <h3 class="section-title">Salary & Requirements</h3>
                     
@@ -482,7 +453,7 @@
                     </div>
                 </div>
 
-                <!-- Submit Button -->
+                <!-- Submit -->
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
                     <button type="submit" class="btn-primary">

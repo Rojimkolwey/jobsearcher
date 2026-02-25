@@ -1012,6 +1012,59 @@ input::placeholder {
     resize: vertical;
 }
 
+
+
+/* Add these CSS rules to your styles.css file */
+
+/* Make sure modal body is visible */
+.modal-body {
+    display: block !important;
+    padding: 2rem;
+}
+
+/* Form section spacing */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Section titles */
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+/* Make sure the modal container shows content */
+.modal-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+/* Ensure modal body can scroll */
+.modal-body {
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Modal footer should stay at bottom */
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-secondary);
+    flex-shrink: 0;
+}
+
 /* ==================== CHECKBOX GROUP (OLD MODAL) ==================== */
 .checkbox-group {
     display: flex;
