@@ -102,8 +102,27 @@ document.addEventListener('DOMContentLoaded', function() {
             campaigns.push(campaignData);
             localStorage.setItem('jobCampaigns', JSON.stringify(campaigns));
             
-            // Show success
-            showNotification(`Campaign "${campaignData.campaignName}" created successfully! 🎉`, 'success');
+            // Send to n8n webhook
+            fetch('https://simsain.app.n8n.cloud/webhook-test/create-campaign', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(campaignData)
+            })
+            .then(response => {
+                console.log('n8n webhook response:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('n8n webhook data:', data);
+                showNotification(`Campaign "${campaignData.campaignName}" created and sent to automation! 🎉`, 'success');
+            })
+            .catch(error => {
+                console.error('n8n webhook error:', error);
+                // Still show success since it's saved locally
+                showNotification(`Campaign "${campaignData.campaignName}" created successfully! 🎉`, 'success');
+            });
             
             // Close modal after delay
             setTimeout(() => {
