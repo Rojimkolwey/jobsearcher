@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - JobAutomate</title>
+    <link rel="stylesheet" href="styles-consolidated.css">
+    <script src="profile.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="#4F46E5"/>
+                    <path d="M16 8L24 16L16 24L8 16L16 8Z" fill="white"/>
+                </svg>
+                <h1>JobAutomate</h1>
+            </div>
+            <nav class="nav">
+                <a href="job-automation-ui.html" class="nav-link">Dashboard</a>
+                <a href="applications.html" class="nav-link">Applications</a>
+                <a href="#settings" class="nav-link">Settings</a>
+                <a href="profile.html" class="nav-link active">Profile</a>
+            </nav>
+            <button class="btn-profile">
+                <span class="avatar">JD</span>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Profile & Settings</h1>
+                    <p class="page-subtitle">Manage your information and preferences for job applications</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" id="cancelBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+                    <button class="btn-primary" id="saveProfileBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        <span>Save Profile</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="profile-container">
+                <form id="profileForm" class="profile-form">
+                    
+                    <!-- Personal Information -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Personal Information</h2>
+                                <p class="section-description">Your basic contact details</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="form-group">
+                                <label for="firstName">
+                                    First Name *
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    placeholder="John"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">
+                                    Last Name *
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="lastName" 
+                                    name="lastName" 
+                                    placeholder="Doe"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">
+                                    Email Address *
+                                </label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    placeholder="john.doe@example.com"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">
+                                    Phone Number *
+                                </label>
+                                <input 
+                                    type="tel" 
+                                    id="phone" 
+                                    name="phone" 
+                                    placeholder="+1 (555) 123-4567"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="location">
+                                    Current Location *
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    name="location" 
+                                    placeholder="San Francisco, CA"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Professional Links -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Professional Links</h2>
+                                <p class="section-description">Your online presence</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="form-group">
+                                <label for="linkedInUrl">
+                                    LinkedIn Profile
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="linkedInUrl" 
+                                    name="linkedInUrl" 
+                                    placeholder="https://linkedin.com/in/johndoe"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="githubUrl">
+                                    GitHub Profile
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="githubUrl" 
+                                    name="githubUrl" 
+                                    placeholder="https://github.com/johndoe"
+                                >
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="portfolioUrl">
+                                    Portfolio Website
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="portfolioUrl" 
+                                    name="portfolioUrl" 
+                                    placeholder="https://johndoe.com"
+                                >
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Resume & Documents -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Resume & Documents</h2>
+                                <p class="section-description">Upload your resume and cover letter</p>
+                            </div>
+                        </div>
+
+                        <div class="document-upload">
+                            <div class="upload-box" id="resumeUploadBox">
+                                <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" hidden>
+                                <div class="upload-content">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    <h3>Upload Resume</h3>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span class="upload-hint">PDF, DOC, DOCX (Max 5MB)</span>
+                                </div>
+                                <div class="uploaded-file" id="resumePreview" style="display: none;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    <div class="file-info">
+                                        <span class="file-name" id="resumeFileName"></span>
+                                        <span class="file-size" id="resumeFileSize"></span>
+                                    </div>
+                                    <button type="button" class="btn-icon" id="removeResume">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="coverLetter">
+                                    Cover Letter Template
+                                    <span class="label-hint">This will be customized for each application</span>
+                                </label>
+                                <textarea 
+                                    id="coverLetter" 
+                                    name="coverLetter" 
+                                    rows="8"
+                                    placeholder="Dear Hiring Manager,
+
+I am writing to express my interest in the [Position] role at [Company]. With my experience in [Skills], I believe I would be a great fit for this position...
+
+Best regards,
+[Your Name]"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Skills & Experience -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Skills & Experience</h2>
+                                <p class="section-description">Your professional background</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="form-group">
+                                <label for="yearsExperience">
+                                    Years of Experience *
+                                </label>
+                                <select id="yearsExperience" name="yearsExperience" required>
+                                    <option value="">Select...</option>
+                                    <option value="0-1">Less than 1 year</option>
+                                    <option value="1-2">1-2 years</option>
+                                    <option value="3-5">3-5 years</option>
+                                    <option value="5-10">5-10 years</option>
+                                    <option value="10+">10+ years</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="currentTitle">
+                                    Current Job Title
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="currentTitle" 
+                                    name="currentTitle" 
+                                    placeholder="Senior Software Engineer"
+                                >
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="skills">
+                                    Key Skills *
+                                    <span class="label-hint">Comma separated (e.g., JavaScript, React, Node.js)</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="skills" 
+                                    name="skills" 
+                                    placeholder="JavaScript, React, Node.js, TypeScript, AWS"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="bio">
+                                    Professional Summary
+                                    <span class="label-hint">A brief overview of your experience (optional)</span>
+                                </label>
+                                <textarea 
+                                    id="bio" 
+                                    name="bio" 
+                                    rows="4"
+                                    placeholder="Experienced software engineer with 5+ years building scalable web applications..."
+                                ></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Salary Expectations -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Salary Expectations</h2>
+                                <p class="section-description">Your desired salary range (Annual USD)</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="form-group">
+                                <label for="minSalary">
+                                    Minimum Salary *
+                                </label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon">$</span>
+                                    <input 
+                                        type="number" 
+                                        id="minSalary" 
+                                        name="minSalary" 
+                                        placeholder="80,000"
+                                        min="0"
+                                        step="1000"
+                                        required
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxSalary">
+                                    Maximum Salary *
+                                </label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon">$</span>
+                                    <input 
+                                        type="number" 
+                                        id="maxSalary" 
+                                        name="maxSalary" 
+                                        placeholder="150,000"
+                                        min="0"
+                                        step="1000"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Job Preferences -->
+                    <section class="profile-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M2 12h20"/>
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="section-title">Job Preferences</h2>
+                                <p class="section-description">Your work preferences</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-grid">
+                            <div class="form-group full-width">
+                                <label>Preferred Work Type</label>
+                                <div class="checkbox-row">
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="workType" value="Remote" checked>
+                                        <span>Remote</span>
+                                    </label>
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="workType" value="Hybrid">
+                                        <span>Hybrid</span>
+                                    </label>
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="workType" value="On-site">
+                                        <span>On-site</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Employment Type</label>
+                                <div class="checkbox-row">
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="employmentType" value="Full-time" checked>
+                                        <span>Full-time</span>
+                                    </label>
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="employmentType" value="Part-time">
+                                        <span>Part-time</span>
+                                    </label>
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="employmentType" value="Contract">
+                                        <span>Contract</span>
+                                    </label>
+                                    <label class="checkbox-pill">
+                                        <input type="checkbox" name="employmentType" value="Freelance">
+                                        <span>Freelance</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </form>
+
+                <!-- Profile Stats Card -->
+                <aside class="profile-stats">
+                    <div class="stats-card">
+                        <h3>Profile Completion</h3>
+                        <div class="progress-ring">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="54" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+                                <circle id="progressCircle" cx="60" cy="60" r="54" fill="none" stroke="#4F46E5" stroke-width="8" 
+                                        stroke-dasharray="339.292" stroke-dashoffset="339.292" 
+                                        transform="rotate(-90 60 60)" style="transition: stroke-dashoffset 0.5s ease"/>
+                            </svg>
+                            <div class="progress-text">
+                                <span id="profilePercentage">0%</span>
+                            </div>
+                        </div>
+                        <p class="stats-description">Complete your profile to improve application success rate</p>
+                    </div>
+
+                    <div class="stats-card">
+                        <h3>Profile Strength</h3>
+                        <div class="strength-indicators">
+                            <div class="strength-item">
+                                <span class="strength-label">Basic Info</span>
+                                <span class="strength-badge" id="basicInfoBadge">Incomplete</span>
+                            </div>
+                            <div class="strength-item">
+                                <span class="strength-label">Resume</span>
+                                <span class="strength-badge" id="resumeBadge">Missing</span>
+                            </div>
+                            <div class="strength-item">
+                                <span class="strength-label">Skills</span>
+                                <span class="strength-badge" id="skillsBadge">Incomplete</span>
+                            </div>
+                            <div class="strength-item">
+                                <span class="strength-label">Links</span>
+                                <span class="strength-badge" id="linksBadge">Optional</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <div>
+                            <strong>Auto-Apply Ready?</strong>
+                            <p>Complete your profile to enable automatic job applications. We'll use this information to fill out applications for you.</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
